@@ -60,9 +60,9 @@ class QuestionController extends Controller
      */
     public function update(Request $request, int $id): SupportQuestionResource
     {
-        SupportQuestion::find($id)->update($request->all());
+        $question = $this->_supportQuestion->getQuestion($id)::find($id)->update($request->all());
 
-        return new SupportQuestionResource($question);
+        return new SupportQuestionResource($this->_supportQuestion->getQuestion($id));
     }
 
     /**
@@ -71,12 +71,15 @@ class QuestionController extends Controller
      * @param int $id
      * @return SupportQuestionResource
      */
-    public function destroy(int $id): SupportQuestionResource //edit
+    public function destroy(int $id): SupportQuestionResource
     {
         $question = $this->_supportQuestion->getQuestion($id);
-        $answer = $this->_supportAnswer->getAnswer($id);
-        if ($this->_supportAnswer->getAnswer($id)->delete() && $this->_supportQuestion->getQuestion($id)->delete()) {
-                return new SupportQuestionResource($question);
+        if (!$this->_supportAnswer->getAnswer($id)->delete()) {
+            $question->delete();
+        } else {
+            $question->delete();
+            $this->_supportAnswer->getAnswer($id)->delete();
         }
+        return new SupportQuestionResource($question);
     }
 }

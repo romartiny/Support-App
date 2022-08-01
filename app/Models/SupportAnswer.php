@@ -30,6 +30,6 @@ class SupportAnswer extends Model
 
     public function getAnswer(int $id)
     {
-        return SupportAnswer::firstOrFail()->where('support_question_id', $id);
+        return SupportAnswer::where('support_question_id', $id);
     }
 }
