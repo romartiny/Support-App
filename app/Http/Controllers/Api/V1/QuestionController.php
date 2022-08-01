@@ -10,6 +10,15 @@ use Illuminate\Http\Request;
 
 class QuestionController extends Controller
 {
+    private SupportQuestion $_supportQuestion;
+    private SupportAnswer $_supportAnswer;
+
+    public function __construct(SupportQuestion $supportQuestion, SupportAnswer $supportAnswer)
+    {
+        $this->_supportQuestion = $supportQuestion;
+        $this->_supportAnswer = $supportAnswer;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -51,8 +60,7 @@ class QuestionController extends Controller
      */
     public function update(Request $request, int $id): SupportQuestionResource
     {
-        $question = SupportQuestion::find($id);
-        $question->update($request->all());
+        SupportQuestion::find($id)->update($request->all());
 
         return new SupportQuestionResource($question);
     }
@@ -63,12 +71,12 @@ class QuestionController extends Controller
      * @param int $id
      * @return SupportQuestionResource
      */
-    public function destroy(int $id): SupportQuestionResource
+    public function destroy(int $id): SupportQuestionResource //edit
     {
-        $question = SupportQuestion::findOrFail($id);
-        $answer = SupportAnswer::where('support_question_id', $id);
-        if ($answer->delete() && $question->delete()) {
-            return new SupportQuestionResource($question);
+        $question = $this->_supportQuestion->getQuestion($id);
+        $answer = $this->_supportAnswer->getAnswer($id);
+        if ($this->_supportAnswer->getAnswer($id)->delete() && $this->_supportQuestion->getQuestion($id)->delete()) {
+                return new SupportQuestionResource($question);
         }
     }
 }

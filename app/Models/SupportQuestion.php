@@ -28,4 +28,9 @@ class SupportQuestion extends Model
     {
         return $this->hasMany(SupportAnswer::class);
     }
+
+    public function getQuestion(int $id)
+    {
+        return SupportQuestion::findOrFail($id);
+    }
 }

@@ -23,8 +23,13 @@ class SupportAnswer extends Model
         'updated_at'
     ];
 
-    public function deleteAnswers($id)
+//    public function deleteAnswers($id)
+//    {
+//        return SupportQuestion::find($id)->delete();
+//    }
+
+    public function getAnswer(int $id)
     {
-        return SupportQuestion::find($id)->delete();
+        return SupportAnswer::firstOrFail()->where('support_question_id', $id);
     }
 }
