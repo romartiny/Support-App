@@ -4,10 +4,9 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SupportQuestionResource extends JsonResource
+class MessageResource extends JsonResource
 {
-    public static $wrap = 'question';
-
+    public static $wrap = 'messages';
     /**
      * Transform the resource into an array.
      *
@@ -17,11 +16,11 @@ class SupportQuestionResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'title' => $this->title,
-            'question' => $this->question,
-            'created_at' => $this->created_at->format('Y-m-d h-m-s'),
-            'messages_list' => SupportAnswerResource::collection($this->answersList)
+            'message_id' => $this->id,
+            'ticket_id' => $this->support_tickets_id,
+            'user_name' => $this->message_user_name,
+            'user_message' => $this->message_user_message,
+            'created_at' => $this->created_at->format('Y-m-d H-m-s')
         ];
     }
 }

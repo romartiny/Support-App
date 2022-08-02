@@ -24,6 +24,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        JsonResource::wrap('questions');
+//        JsonResource::parent($this);
     }
 }
