@@ -71,7 +71,7 @@ class MessageController extends Controller
      */
     public function updateTicketMessage(Request $request, int $id, int $messageId): MessageResource
     {
-        $message = $this->_messageTicket->getTicketMessage($messageId)::find($messageId)->update($request->all());
+        $this->_messageTicket->getTicketMessage($messageId)::find($messageId)->update($request->all());
 
         return new MessageResource($this->_messageTicket->getTicketMessage($messageId));
     }
@@ -79,11 +79,14 @@ class MessageController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $ticketId
+     * @param int $messageId
+     * @return MessageResource
      */
-    public function destroy($id)
+    public function deleteTicketMessage(int $ticketId, int $messageId): MessageResource
     {
-        //
+        $message = $this->_messageTicket->getTicketMessage($messageId);
+        $this->_messageTicket->getTicketMessage($messageId)::find($messageId)->delete();
+        return new MessageResource($message);
     }
 }
