@@ -25,14 +25,27 @@ class MessageTicket extends Model
         'updated_at'
     ];
 
-    public function getAnswer(int $id)
+    public function getTicketMessages(int $ticketId, int $messageId): \Illuminate\Database\Eloquent\Collection
     {
-        return MessageTicket::all()->where('support_tickets_id', $id);
-//        return MessageTicket::where('support_tickets_id', $id);
+        return MessageTicket::all()
+            ->where('support_tickets_id', $ticketId)
+            ->where('id', $messageId);
+    }
+
+    public function getTicketMessage(int $id)
+    {
+        return MessageTicket::findOrFail($id);
+    }
+
+    public function deleteMessage($id)
+    {
+        return MessageTicket::where('support_tickets_id', $id)
+            ->delete();
     }
 
     public function supportAnswersList(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(MessageTicket::class);
     }
+
 }

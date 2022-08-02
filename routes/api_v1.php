@@ -5,21 +5,33 @@ use App\Http\Controllers\Api\V1\TicketController;
 use App\Http\Controllers\Api\V1\MessageController;
 use Illuminate\Support\Facades\Route;
 
+
 Route::prefix('/tickets')->group(function () {
-    Route::get('/messages', [MessageController::class, 'showAllMessages'])->name('showAllMessages');
-//    Route::get('/{id}/messages/', [MessageController::class, 'show'])->name('show');
-    Route::get('/{id}/messages', [MessageController::class, 'showTicketMessages'])
-        ->name('showTicketMessages');
-
-
-
-
 
     Route::get('/', [TicketController::class, 'getAllTickets'])->name('getAllTickets');
-    Route::get('/{id}', [TicketController::class, 'showTicket'])->name('showTicket');
+    Route::put('/{ticketId}', [TicketController::class, 'updateTicket'])->name('updateTicket');
+    Route::delete('/{ticketId}', [TicketController::class, 'deleteTicket'])->name('deleteTicket');
     Route::post('/', [TicketController::class, 'addNewTicket'])->name('addNewTicket');
-    Route::put('/{id}', [TicketController::class, 'updateTicket'])->name('updateTicket');
-    Route::delete('/{id}', [TicketController::class, 'deleteTicket'])->name('deleteTicket');
+
+    Route::get('/messages', [MessageController::class, 'showAllMessages'])->name('showAllMessages');
+
+    Route::prefix('/{ticketId}')->group(function () {
+
+        Route::get('/', [TicketController::class, 'showTicket'])->name('showTicket');
+
+        Route::prefix('/messages')->group(function () {
+
+            Route::get('/', [MessageController::class, 'showTicketMessages'])
+                ->name('showTicketMessages');
+            Route::get('/{messageId}', [MessageController::class, 'showSingleMessage'])
+                ->name('showSingleMessage');
+            Route::post('/', [MessageController::class, 'addTicketMessage'])
+                ->name('addTicketMessage');
+            Route::put('/{messageId}', [MessageController::class, 'updateTicketMessage'])
+                ->name('updateTicketMessage');
+        });
+    });
+
 });
 
 // for ticket

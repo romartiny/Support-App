@@ -37,11 +37,11 @@ class SupportTicket extends Model
 
     public function getTicket(int $id)
     {
-        return MessageTicket::findOrFail($id)->where('support_tickets_id', $id);
+        return SupportTicket::findOrFail($id);
     }
 
     public function getAnswer(int $id)
     {
-        return MessageTicket::where('support_tickets_id', $id);
+        return SupportTicket::where('support_tickets_id', $id);
     }
 }

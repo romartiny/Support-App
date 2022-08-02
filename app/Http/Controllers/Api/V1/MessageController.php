@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\MessageResource as MessageResource;
 use App\Models\MessageTicket;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class MessageController extends Controller
 {
@@ -19,9 +20,9 @@ class MessageController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
-    public function showAllMessages(): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+    public function showAllMessages(): AnonymousResourceCollection
     {
         return MessageResource::collection(MessageTicket::all());
     }
@@ -29,10 +30,10 @@ class MessageController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return MessageResource
      */
-    public function store(Request $request)
+    public function addTicketMessage(Request $request): MessageResource
     {
         return new MessageResource(MessageTicket::create($request->all()));
     }
@@ -41,34 +42,38 @@ class MessageController extends Controller
      * Display the specified resource.
      *
      * @param int $id
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
-    public function showTicketMessages(int $id)
+    public function showTicketMessages(int $id): AnonymousResourceCollection
     {
         return MessageResource::collection(MessageTicket::all()->where('support_tickets_id', $id));
     }
 
     /**
-     * Display the specified resource.
+     * Display the single resource.
      *
-     * @param  int  $id
-     * @return MessageResource
+     * @param int $ticketId
+     * @param int $messageId
+     * @return AnonymousResourceCollection
      */
-    public function show($num)
+    public function showSingleMessage(int $ticketId, int $messageId): AnonymousResourceCollection
     {
-        return new MessageResource(MessageTicket::findOrFail($num));
+        return MessageResource::collection($this->_messageTicket->getTicketMessages($ticketId, $messageId));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param int $id
+     * @param int $messageId
+     * @return MessageResource
      */
-    public function update(Request $request, $id)
+    public function updateTicketMessage(Request $request, int $id, int $messageId): MessageResource
     {
-        //
+        $message = $this->_messageTicket->getTicketMessage($messageId)::find($messageId)->update($request->all());
+
+        return new MessageResource($this->_messageTicket->getTicketMessage($messageId));
     }
 
     /**

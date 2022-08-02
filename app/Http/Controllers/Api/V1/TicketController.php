@@ -4,24 +4,28 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TicketResource as TicketResource;
+use App\Models\MessageTicket;
 use App\Models\SupportTicket;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class TicketController extends Controller
 {
     private SupportTicket $_supportTicket;
+    private MessageTicket $_messageTicket;
 
-    public function __construct(SupportTicket $supportTicket)
+    public function __construct(SupportTicket $supportTicket, MessageTicket $messageTicket)
     {
         $this->_supportTicket = $supportTicket;
+        $this->_messageTicket = $messageTicket;
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
-    public function getAllTickets(): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+    public function getAllTickets(): AnonymousResourceCollection
     {
         return TicketResource::collection(SupportTicket::all());
     }
@@ -29,7 +33,7 @@ class TicketController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return TicketResource
      */
     public function addNewTicket(Request $request): TicketResource
@@ -51,7 +55,7 @@ class TicketController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id
      * @return TicketResource
      */
@@ -71,13 +75,12 @@ class TicketController extends Controller
     public function deleteTicket(int $id): TicketResource
     {
         $question = $this->_supportTicket->getTicket($id);
-        $question->delete();
-//        if (!$this->_supportAnswer->getAnswer($id)->delete()) {
-//            $question->delete();
-//        } else {
-//            $question->delete();
-//            $this->_supportAnswer->getAnswer($id)->delete();
-//        }
+        if (!$this->_messageTicket->deleteMessage($id)) {
+            $question->delete();
+        } else {
+            $question->delete();
+            $this->_messageTicket->deleteMessage($id);
+        }
         return new TicketResource($question);
     }
 }
