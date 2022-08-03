@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+//use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class MessageTicket extends Model
 {
@@ -25,7 +27,7 @@ class MessageTicket extends Model
         'updated_at'
     ];
 
-    public function getTicketMessages(int $ticketId, int $messageId): \Illuminate\Database\Eloquent\Collection
+    public function getTicketMessages(int $ticketId, int $messageId): Collection
     {
         return MessageTicket::all()
             ->where('support_tickets_id', $ticketId)
@@ -43,9 +45,9 @@ class MessageTicket extends Model
             ->delete();
     }
 
-    public function supportAnswersList(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(MessageTicket::class);
-    }
+//    public function supportAnswersList(): HasMany
+//    {
+//        return $this->hasMany(MessageTicket::class);
+//    }
 
 }

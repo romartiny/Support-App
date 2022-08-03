@@ -20,6 +20,7 @@ class TicketResource extends JsonResource
             'ticket_id' => $this->id,
             'ticket_title' => $this->title,
             'ticket_question' => $this->question,
+            'ticket_status' => $this->status,
             'created_at' => $this->created_at->format('Y-m-d h:m:s'),
         ];
     }

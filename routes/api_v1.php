@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Api\V1\TicketController;
 use App\Http\Controllers\Api\V1\MessageController;
 use Illuminate\Support\Facades\Route;
