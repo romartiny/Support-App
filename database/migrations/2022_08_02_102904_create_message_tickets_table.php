@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('message_tickets', function (Blueprint $table) {
             $table->id();
             $table->foreignId('support_tickets_id')->constrained();
-            $table->string('message_user_name');
-            $table->string('message_user_message');
+            $table->string('user_name');
+            $table->string('user_message');
             $table->timestamps();
         });
     }

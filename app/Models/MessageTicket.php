@@ -14,8 +14,8 @@ class MessageTicket extends Model
     protected $fillable = [
         'id',
         'support_tickets_id',
-        'message_user_name',
-        'message_user_message',
+        'user_name',
+        'user_message',
         'created_at'
     ];
 

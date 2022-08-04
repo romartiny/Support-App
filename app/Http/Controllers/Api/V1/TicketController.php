@@ -38,6 +38,12 @@ class TicketController extends Controller
      */
     public function addNewTicket(Request $request): TicketResource
     {
+        $request->validate([
+            'title' => 'required',
+            'question' => 'required',
+            'status' => 'required',
+        ]);
+
         return new TicketResource(SupportTicket::create($request->all()));
     }
 

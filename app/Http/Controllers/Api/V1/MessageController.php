@@ -35,6 +35,12 @@ class MessageController extends Controller
      */
     public function addTicketMessage(Request $request): MessageResource
     {
+        $request->validate([
+            'support_tickets_id' => 'required',
+            'user_name' => 'required',
+            'user_message' => 'required'
+        ]);
+
         return new MessageResource(MessageTicket::create($request->all()));
     }
 
