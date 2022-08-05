@@ -31,17 +31,23 @@ class MessageController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return MessageResource
+     * @return MessageResource|string[]
      */
-    public function addTicketMessage(Request $request): MessageResource
+    public function addTicketMessage(Request $request, int $ticketId)
     {
-        $request->validate([
-            'support_tickets_id' => 'required',
-            'user_name' => 'required',
-            'user_message' => 'required'
-        ]);
+        if (!MessageTicket::find($ticketId)) {
+            return [
+                'error' => "Ticket $ticketId not found"
+            ];
+        } else {
+            $request->validate([
+                'support_tickets_id' => 'required',
+                'user_name' => 'required',
+                'user_message' => 'required'
+            ]);
 
-        return new MessageResource(MessageTicket::create($request->all()));
+            return new MessageResource(MessageTicket::create($request->all()));
+        }
     }
 
     /**
@@ -60,11 +66,17 @@ class MessageController extends Controller
      *
      * @param int $ticketId
      * @param int $messageId
-     * @return AnonymousResourceCollection
+     * @return AnonymousResourceCollection|string[]
      */
-    public function showSingleMessage(int $ticketId, int $messageId): AnonymousResourceCollection
+    public function showSingleMessage(int $ticketId, int $messageId)
     {
-        return MessageResource::collection($this->_messageTicket->getTicketMessages($ticketId, $messageId));
+        if (!MessageTicket::find($messageId)) {
+            return [
+                'error' => "Message $messageId not found"
+            ];
+        } else {
+            return MessageResource::collection($this->_messageTicket->getTicketMessages($ticketId, $messageId));
+        }
     }
 
     /**
@@ -73,13 +85,18 @@ class MessageController extends Controller
      * @param Request $request
      * @param int $id
      * @param int $messageId
-     * @return MessageResource
+     * @return MessageResource|string[]
      */
-    public function updateTicketMessage(Request $request, int $id, int $messageId): MessageResource
+    public function updateTicketMessage(Request $request, int $id, int $messageId)
     {
-        $this->_messageTicket->getTicketMessage($messageId)::find($messageId)->update($request->all());
-
-        return new MessageResource($this->_messageTicket->getTicketMessage($messageId));
+        if (!MessageTicket::find($messageId)) {
+            return [
+                'error' => "Message $messageId not found"
+            ];
+        } else {
+            $this->_messageTicket->getTicketMessage($messageId)::find($messageId)->update($request->all());
+            return new MessageResource($this->_messageTicket->getTicketMessage($messageId));
+        }
     }
 
     /**
@@ -87,12 +104,18 @@ class MessageController extends Controller
      *
      * @param int $ticketId
      * @param int $messageId
-     * @return MessageResource
+     * @return MessageResource|string[]
      */
-    public function deleteTicketMessage(int $ticketId, int $messageId): MessageResource
+    public function deleteTicketMessage(int $ticketId, int $messageId)
     {
-        $message = $this->_messageTicket->getTicketMessage($messageId);
-        $this->_messageTicket->getTicketMessage($messageId)::find($messageId)->delete();
-        return new MessageResource($message);
+        if (!MessageTicket::find($messageId)) {
+            return [
+                'error' => "Message $messageId not found"
+            ];
+        } else {
+            $message = $this->_messageTicket->getTicketMessage($messageId);
+            $this->_messageTicket->getTicketMessage($messageId)::find($messageId)->delete();
+            return new MessageResource($message);
+        }
     }
 }

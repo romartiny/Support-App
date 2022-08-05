@@ -43,4 +43,5 @@ class SupportTicket extends Model
 //    {
 //        return SupportTicket::where('support_tickets_id', $id);
 //    }
+
 }

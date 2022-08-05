@@ -51,11 +51,17 @@ class TicketController extends Controller
      * Display the specified resource.
      *
      * @param int $id
-     * @return TicketResource
+     * @return TicketResource|string[]
      */
-    public function showTicket(int $id): TicketResource
+    public function showTicket(int $id)
     {
-        return new TicketResource(SupportTicket::findOrFail($id));
+        if (!SupportTicket::find($id)) {
+            return [
+                'error' => "Ticket $id not found"
+            ];
+        } else {
+            return new TicketResource(SupportTicket::find($id));
+        }
     }
 
     /**
@@ -63,30 +69,43 @@ class TicketController extends Controller
      *
      * @param Request $request
      * @param int $id
-     * @return TicketResource
+     * @return TicketResource|string[]
      */
-    public function updateTicket(Request $request, int $id): TicketResource
+    public function updateTicket(Request $request, int $id)
     {
-        $question = $this->_supportTicket->getTicket($id)::find($id)->update($request->all());
+        if (!SupportTicket::find($id)) {
+            return [
+                'error' => "Ticket $id not found"
+            ];
+        } else {
+            $question = $this->_supportTicket->getTicket($id)::find($id)->update($request->all());
 
-        return new TicketResource($this->_supportTicket->getTicket($id));
+            return new TicketResource($this->_supportTicket->getTicket($id));
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return TicketResource
+     * @return TicketResource|string[]
      */
-    public function deleteTicket(int $id): TicketResource
+    public function deleteTicket(int $id)
     {
-        $question = $this->_supportTicket->getTicket($id);
-        if (!$this->_messageTicket->deleteMessage($id)) {
-            $question->delete();
+        if (!SupportTicket::find($id)) {
+            return [
+                'error' => "Ticket $id not found"
+            ];
         } else {
-            $question->delete();
-            $this->_messageTicket->deleteMessage($id);
+            $question = $this->_supportTicket->getTicket($id);
+            if (!$this->_messageTicket->deleteMessage($id)) {
+                $question->delete();
+            } else {
+                $question->delete();
+                $this->_messageTicket->deleteMessage($id);
+            }
+            return new TicketResource($question);
         }
-        return new TicketResource($question);
     }
+
 }

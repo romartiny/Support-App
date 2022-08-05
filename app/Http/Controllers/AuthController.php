@@ -33,7 +33,7 @@ class AuthController extends Controller
         return response($response, 201);
     }
 
-    public function logout(Request $request)
+    public function logout(Request $request): array
     {
         auth()->user()->tokens()->delete();
 
