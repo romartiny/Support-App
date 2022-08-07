@@ -34,14 +34,14 @@ class MessageTicket extends Model
             ->where('id', $messageId);
     }
 
-    public function getTicketMessage(int $id)
+    public function getTicketMessage(int $messageId)
     {
-        return MessageTicket::findOrFail($id);
+        return MessageTicket::findOrFail($messageId);
     }
 
-    public function deleteMessage($id)
+    public function deleteMessage(int $messageId)
     {
-        return MessageTicket::where('support_tickets_id', $id)
+        return MessageTicket::where('support_tickets_id', $messageId)
             ->delete();
     }
 

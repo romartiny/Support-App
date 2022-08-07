@@ -34,9 +34,9 @@ class SupportTicket extends Model
 //        return $this->hasMany(UserQuestion::class);
 //    }
 
-    public function getTicket(int $id)
+    public function getTicket(int $ticketId)
     {
-        return SupportTicket::findOrFail($id);
+        return SupportTicket::findOrFail($ticketId);
     }
 
 //    public function getAnswer(int $id)

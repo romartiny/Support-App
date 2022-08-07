@@ -31,6 +31,7 @@ class MessageController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
+     * @param int $ticketId
      * @return MessageResource|string[]
      */
     public function addTicketMessage(Request $request, int $ticketId)
@@ -53,12 +54,12 @@ class MessageController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param int $id
+     * @param int $messageId
      * @return AnonymousResourceCollection
      */
-    public function showTicketMessages(int $id): AnonymousResourceCollection
+    public function showTicketMessages(int $messageId): AnonymousResourceCollection
     {
-        return MessageResource::collection(MessageTicket::all()->where('support_tickets_id', $id));
+        return MessageResource::collection(MessageTicket::all()->where('support_tickets_id', $messageId));
     }
 
     /**
@@ -83,11 +84,11 @@ class MessageController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param int $id
+     * @param int $ticketId
      * @param int $messageId
      * @return MessageResource|string[]
      */
-    public function updateTicketMessage(Request $request, int $id, int $messageId)
+    public function updateTicketMessage(Request $request, int $ticketId, int $messageId)
     {
         if (!MessageTicket::find($messageId)) {
             return [

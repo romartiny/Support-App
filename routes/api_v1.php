@@ -5,11 +5,11 @@ use App\Http\Controllers\Api\V1\MessageController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
-//public routes for auth
+//public routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-//private routes for use ticket system
+//protected routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::prefix('/tickets')->group(function () {
